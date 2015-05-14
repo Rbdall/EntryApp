@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">EntryApp</string>
-    <string name="title_activity_main_menu">MainMenu</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">My First App</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
 </resources>
