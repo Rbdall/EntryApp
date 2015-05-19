@@ -34,6 +34,7 @@ public class TicketList extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getApplicationContext(), FanSelectedTicket.class);
+                i.putExtra("ChosenTicket", possibleTickets[position]);
                 startActivity(i);
             }
         });

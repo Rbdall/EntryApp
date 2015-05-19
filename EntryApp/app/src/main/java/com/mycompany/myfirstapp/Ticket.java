@@ -1,9 +1,11 @@
 package com.mycompany.myfirstapp;
 
+import java.io.Serializable;
+
 /**
  * Created by ryan on 5/19/15.
  */
-public class Ticket {
+public class Ticket implements Serializable{
     private String ticketName;
     private String venueName;
     private String eventDate;
@@ -53,7 +55,7 @@ public class Ticket {
     }
 
     public String toString(){
-        return ticketName + '\n' +
+        return ticketName + '\n' + '\n' +
                 '\t' + "Venue: " + venueName + '\n' +
                 '\t' + "Date: " + eventDate + '\n' +
                 '\t' + seatLocation + '\n' +
