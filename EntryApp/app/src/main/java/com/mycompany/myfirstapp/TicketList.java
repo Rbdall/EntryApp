@@ -1,9 +1,12 @@
 package com.mycompany.myfirstapp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -19,17 +22,22 @@ public class TicketList extends ActionBarActivity {
             new Ticket("The Mythical Man-Moth", "Sydney Opera House", "1/6/17", "Row 1", "62954", "Ryan Dall", true)
 
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ticket_list);
-        Ticket test = new Ticket("test", "test", "test", "test", "test", "test", true);
-        Ticket test2 = new Ticket("test2", "test2", "test2", "test2", "test2", "test2", true);
         ListAdapter listAdapter = new ArrayAdapter<Ticket>(this, android.R.layout.simple_list_item_1, possibleTickets);
         ListView ticketList = (ListView) findViewById(R.id.listView);
         ticketList.setAdapter(listAdapter);
+        ticketList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(getApplicationContext(), FanSelectedTicket.class);
+                startActivity(i);
+            }
+        });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -48,7 +56,6 @@ public class TicketList extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

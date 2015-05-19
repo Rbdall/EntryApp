@@ -7,4 +7,5 @@
     <string name="title_activity_ticket_list">Your Tickets</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_fan_selected_ticket">FanSelectedTicket</string>
 </resources>

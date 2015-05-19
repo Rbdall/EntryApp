@@ -20,6 +20,10 @@
             android:name=".TicketList"
             android:label="@string/title_activity_ticket_list" >
         </activity>
+        <activity
+            android:name=".FanSelectedTicket"
+            android:label="@string/title_activity_fan_selected_ticket" >
+        </activity>
     </application>
 
 </manifest>
