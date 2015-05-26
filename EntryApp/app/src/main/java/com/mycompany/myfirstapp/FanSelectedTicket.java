@@ -1,5 +1,7 @@
 package com.mycompany.myfirstapp;
 
+import android.bluetooth.*;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -31,6 +33,23 @@ public class FanSelectedTicket extends ActionBarActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 showProgressBar(isChecked);
+                if(isChecked) {
+                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (mBluetoothAdapter == null) {
+                        //display bad things
+                        System.out.println("Device has no bluetooth functionality");
+                    } else {
+                        if (!mBluetoothAdapter.isEnabled()) {
+                            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                            startActivityForResult(enableBtIntent, 0);
+                        }
+                        Intent discoverableIntent;
+                        discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                        startActivity(discoverableIntent);
+                    }
+                }
+
             }
         });
 
