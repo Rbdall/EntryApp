@@ -46,4 +46,14 @@
         android:layout_alignRight="@+id/TicketText"
         android:layout_alignEnd="@+id/TicketText" />
 
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/ColorView"
+        android:layout_gravity="bottom"
+        android:layout_below="@+id/pairedText"
+        android:layout_marginLeft="-200dp"
+        android:layout_marginRight="-200dp"
+        android:layout_marginBottom="-200dp"></FrameLayout>
+
 </RelativeLayout>

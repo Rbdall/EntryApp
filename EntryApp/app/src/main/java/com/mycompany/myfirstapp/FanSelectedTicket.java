@@ -5,12 +5,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 
@@ -170,6 +174,14 @@ public class FanSelectedTicket extends ActionBarActivity {
         }
     }
 
+    private boolean DEMO_MODE = true;
+    private class changeScreen extends TimerTask{
+        public void run(){
+            Intent i = new Intent(getApplicationContext(), ValidatedTicket.class);
+            startActivity(i);
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,6 +202,15 @@ public class FanSelectedTicket extends ActionBarActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 showProgressBar(isChecked);
                 if(isChecked) {
+                    if(DEMO_MODE){
+                        Timer timer = new Timer();
+                        FrameLayout colorView = (FrameLayout) findViewById(R.id.ColorView);
+                        int color = Color.parseColor("#00aacc");
+                        colorView.setBackgroundColor(color);
+                        timer.schedule(new changeScreen(), 6000);
+
+                        return;
+                    }
                     mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
                         //display bad things
