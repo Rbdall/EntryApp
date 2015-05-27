@@ -1,4 +1,4 @@
-package com.mycompany.myfirstapp;
+package com.mycompany.EntryApp;
 
 import java.io.Serializable;
 

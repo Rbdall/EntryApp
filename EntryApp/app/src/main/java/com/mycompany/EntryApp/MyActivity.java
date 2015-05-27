@@ -1,28 +1,26 @@
-package com.mycompany.myfirstapp;
+package com.mycompany.EntryApp;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class ValidatedTicket extends ActionBarActivity {
+public class MyActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_validated_ticket);
+        setContentView(R.layout.activity_my);
+        Intent i = new Intent(getApplicationContext(), TicketList.class);
+        this.startActivity(i);
     }
-
-    /*@Override
-    public void onBackPressed(){
-        return;
-    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_validated_ticket, menu);
+        getMenuInflater().inflate(R.menu.menu_my, menu);
         return true;
     }
 

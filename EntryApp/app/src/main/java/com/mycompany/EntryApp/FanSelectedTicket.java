@@ -1,4 +1,4 @@
-package com.mycompany.myfirstapp;
+package com.mycompany.EntryApp;
 
 import android.bluetooth.*;
 import android.content.BroadcastReceiver;
