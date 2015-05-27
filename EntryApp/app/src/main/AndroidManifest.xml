@@ -22,6 +22,8 @@
         <activity
             android:name="com.mycompany.EntryApp.UsherColorScreen"
             android:label="@string/title_activity_usher_color_screen" >
+        </activity>
+        <activity
             android:name="com.mycompany.EntryApp.TicketList"
             android:label="@string/title_activity_ticket_list" >
         </activity>

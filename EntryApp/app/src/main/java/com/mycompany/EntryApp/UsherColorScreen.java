@@ -48,13 +48,13 @@ public class UsherColorScreen extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.mycompany.myfirstapp.R.layout.activity_usher_color_screen);
+        setContentView(com.mycompany.EntryApp.R.layout.activity_usher_color_screen);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(),"This device does not support Bluetooth.", Toast.LENGTH_LONG).show();
         } else {
-            onButton = (Button)findViewById(com.mycompany.myfirstapp.R.id.onButton);
+            onButton = (Button)findViewById(com.mycompany.EntryApp.R.id.onButton);
             onButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -65,7 +65,7 @@ public class UsherColorScreen extends ActionBarActivity {
                                             }
                                         }
                                      });
-            offButton = (Button)findViewById(com.mycompany.myfirstapp.R.id.offButton);
+            offButton = (Button)findViewById(com.mycompany.EntryApp.R.id.offButton);
             offButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -75,7 +75,7 @@ public class UsherColorScreen extends ActionBarActivity {
 
 
             //Set the BTArrayAdapter to the listview for debugging purposes
-            myListView = (ListView)findViewById(com.mycompany.myfirstapp.R.id.listView1);
+            myListView = (ListView)findViewById(com.mycompany.EntryApp.R.id.listView1);
             BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
             myListView.setAdapter(BTArrayAdapter);
 
@@ -148,7 +148,7 @@ public class UsherColorScreen extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(com.mycompany.myfirstapp.R.menu.menu_usher_color_screen, menu);
+        getMenuInflater().inflate(com.mycompany.EntryApp.R.menu.menu_usher_color_screen, menu);
         return true;
     }
 
@@ -160,7 +160,7 @@ public class UsherColorScreen extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == com.mycompany.myfirstapp.R.id.action_settings) {
+        if (id == com.mycompany.EntryApp.R.id.action_settings) {
             return true;
         }
 

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25px"
         android:text="FAN"
-        android:onClick="usherPress"/>
+        android:onClick="fanPress"/>
     <Button
         android:id="@+id/usherMainButton"
         android:layout_width="fill_parent"

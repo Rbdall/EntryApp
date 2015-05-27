@@ -18,10 +18,10 @@ public class MyActivity extends ActionBarActivity {
     }
 
     //called when the user presses the fanButton
-   /* public void fanPress(View view){
-        Intent intent = new Intent(this, FanActivity1.class);
+    public void fanPress(View view){
+        Intent intent = new Intent(this, TicketList.class);
         startActivity(intent);
-    }*/
+    }
 
     //call when the user presses the usherButton
     public void usherPress(View view){
