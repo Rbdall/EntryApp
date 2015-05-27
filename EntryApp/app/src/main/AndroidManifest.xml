@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mycompany.myfirstapp" >
+    package="com.mycompany.EntryApp" >
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="EntryApp"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MyActivity"
-            android:label="@string/app_name" >
+            android:name="com.mycompany.EntryApp.MyActivity"
+            android:label="EntryApp" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -17,8 +20,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UsherColorScreen"
+            android:name="com.mycompany.EntryApp.UsherColorScreen"
             android:label="@string/title_activity_usher_color_screen" >
+            android:name="com.mycompany.EntryApp.TicketList"
+            android:label="@string/title_activity_ticket_list" >
+        </activity>
+        <activity
+            android:name="com.mycompany.EntryApp.FanSelectedTicket"
+            android:label="@string/title_activity_fan_selected_ticket" >
+        </activity>
+        <activity
+            android:name="com.mycompany.EntryApp.ValidatedTicket"
+            android:label="@string/title_activity_validated_ticket" >
         </activity>
     </application>
 
