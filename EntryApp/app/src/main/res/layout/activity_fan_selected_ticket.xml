@@ -36,4 +36,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/pairedText"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/TicketText"
+        android:layout_alignEnd="@+id/TicketText" />
+
 </RelativeLayout>
