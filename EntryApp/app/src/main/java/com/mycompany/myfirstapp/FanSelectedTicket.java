@@ -38,7 +38,7 @@ public class FanSelectedTicket extends ActionBarActivity {
                 if(mConnection == null) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     TextView ticketInformation = (TextView) findViewById(R.id.pairedText);
-                    ticketInformation.setText(intent.getStringExtra(BluetoothDevice.EXTRA_NAME));
+                    ticketInformation.setText("You are paired with " + device.getAddress());
                     ConnectThread connection = new ConnectThread(device);
                     connection.run();
                     if(connection.getSocket() != null){
@@ -174,7 +174,7 @@ public class FanSelectedTicket extends ActionBarActivity {
         }
     }
 
-    private boolean DEMO_MODE = true;
+    private boolean DEMO_MODE = false;
     private class changeScreen extends TimerTask{
         public void run(){
             Intent i = new Intent(getApplicationContext(), ValidatedTicket.class);
