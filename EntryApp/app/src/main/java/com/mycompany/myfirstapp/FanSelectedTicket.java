@@ -179,6 +179,7 @@ public class FanSelectedTicket extends ActionBarActivity {
         public void run(){
             Intent i = new Intent(getApplicationContext(), ValidatedTicket.class);
             startActivity(i);
+            finish();
         }
 
     }
