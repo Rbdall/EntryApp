@@ -4,6 +4,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.content.Intent;
 
 
 public class MyActivity extends ActionBarActivity {
@@ -12,7 +14,21 @@ public class MyActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
     }
+
+    //called when the user presses the fanButton
+   /* public void fanPress(View view){
+        Intent intent = new Intent(this, FanActivity1.class);
+        startActivity(intent);
+    }*/
+
+    //call when the user presses the usherButton
+    public void usherPress(View view){
+        Intent intent = new Intent(this, UsherColorScreen.class);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
