@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mycompany.myfirstapp" >
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +18,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".TicketList"
+            android:label="@string/title_activity_ticket_list" >
+        </activity>
+        <activity
+            android:name=".FanSelectedTicket"
+            android:label="@string/title_activity_fan_selected_ticket" >
+        </activity>
+        <activity
+            android:name=".ValidatedTicket"
+            android:label="@string/title_activity_validated_ticket" >
         </activity>
     </application>
 

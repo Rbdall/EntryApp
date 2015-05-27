@@ -4,4 +4,9 @@
     <string name="button_send">Send</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_ticket_list">Your Tickets</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_fan_selected_ticket">Selected Ticket</string>
+    <string name="title_activity_validated_ticket">ValidatedTicket</string>
 </resources>
