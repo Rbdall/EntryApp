@@ -32,8 +32,10 @@ public class UsherColorScreen extends ActionBarActivity {
     private Button onButton;
     private Button offButton;
     private Handler mHandler = new Handler();
+    private Handler acceptHandler = new Handler();
+    private BluetoothServerSocket mServerSocket;
 
-    private final BroadcastReceiver bReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -85,6 +87,31 @@ public class UsherColorScreen extends ActionBarActivity {
 
     }
 
+    private Runnable serverAcceptThread = new Runnable() {
+        @Override
+        public void run() {
+            BluetoothSocket socket = null;
+            while(true){
+                try {
+                    socket = mServerSocket.accept();
+                } catch (IOException e) {break;}
+                if(socket != null){
+                    manageConnectedSocket(socket);
+                    //closing for now, will need to keep open late to accept more than one connection
+                    try {
+                        mServerSocket.close();
+                    } catch (IOException e) {e.printStackTrace();}
+                }
+
+            }
+
+             //       mServerSocket.accept();
+            if(socket != null)
+                manageConnectedSocket(socket);
+        }
+    };
+
+    //Shouldn't need this for final app, only for debugging discoverability
     private Runnable updatePairedDevices = new Runnable() {
         @Override
         public void run() {
@@ -104,27 +131,31 @@ public class UsherColorScreen extends ActionBarActivity {
             Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(turnOnIntent, 0);
 
-            //Open ServerSocket
-//            BluetoothServerSocket tmp = null;
-//            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord();
-//            BluetoothServerSocket mServerSocket = tmp;
-//            BluetoothSocket socket = mServerSocket.accept();
-//            if(socket != null)
-//                manageConnectedSocket(socket);
-
             //Start discovery
             BTArrayAdapter.clear();
 
-            registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+            registerReceiver(mReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
             startActivity(discoverableIntent);
 
-            mBluetoothAdapter.startDiscovery();
+            //don't think we need this for the server side
+            //mBluetoothAdapter.startDiscovery();
 
             //Start Handler to update grid
             mHandler.removeCallbacks(updatePairedDevices);
             mHandler.postDelayed(updatePairedDevices, 1000);
+
+            //Open ServerSocket
+            BluetoothServerSocket tmp = null;
+            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("MYAPP",MY_UUID);
+            mServerSocket = tmp;
+//            BluetoothSocket socket = mServerSocket.accept();
+//            if(socket != null)
+//                manageConnectedSocket(socket);
+            //Start Accepting
+            acceptHandler.removeCallbacks(serverAcceptThread);
+            acceptHandler.postDelayed(serverAcceptThread, 1000);
         }
         else{
             Toast.makeText(getApplicationContext(),"Bluetooth is already on",Toast.LENGTH_LONG).show();
@@ -133,7 +164,8 @@ public class UsherColorScreen extends ActionBarActivity {
     //Turn Bluetooth Off if not already
     public void off(View view){
         if (mBluetoothAdapter.isEnabled()){
-            mBluetoothAdapter.cancelDiscovery();
+            //mBluetoothAdapter.cancelDiscovery();
+            unregisterReceiver(mReceiver);
             mBluetoothAdapter.disable();
         }
     }
