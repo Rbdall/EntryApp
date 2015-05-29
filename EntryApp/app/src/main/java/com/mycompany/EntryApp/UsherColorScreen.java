@@ -20,6 +20,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
@@ -38,6 +40,8 @@ public class UsherColorScreen extends ActionBarActivity {
     private Handler acceptHandler = new Handler();
     private BluetoothServerSocket mServerSocket;
 
+    private BluetoothManager mBluetoothManager;
+
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -45,7 +49,23 @@ public class UsherColorScreen extends ActionBarActivity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // add the name and the MAC address of the object to the arrayAdapter
                 BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+
                 //BTArrayAdapter.notifyDataSetChanged();
+                //Open ServerSocket
+               /* BluetoothServerSocket tmp = null;
+                try {
+                    tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("MYAPP", appUUID);
+                    mServerSocket = tmp;
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }*/
+//            BluetoothSocket socket = mServerSocket.accept();
+//            if(socket != null)
+//                manageConnectedSocket(socket);
+                //Start Accepting
+                //acceptHandler.removeCallbacks(serverAcceptThread);
+                //acceptHandler.postDelayed(serverAcceptThread, 1000);
             }
         }
     };
@@ -59,6 +79,7 @@ public class UsherColorScreen extends ActionBarActivity {
         if(mBluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(),"This device does not support Bluetooth.", Toast.LENGTH_LONG).show();
         } else {
+            mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler);
             onButton = (Button)findViewById(com.mycompany.EntryApp.R.id.onButton);
             onButton.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -137,10 +158,12 @@ public class UsherColorScreen extends ActionBarActivity {
             //Start discovery
             BTArrayAdapter.clear();
 
-            registerReceiver(mReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+            //registerReceiver(mReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
             startActivity(discoverableIntent);
+
+            mBluetoothManager.start();
 
             //don't think we need this for the server side
             //mBluetoothAdapter.startDiscovery();
@@ -149,16 +172,7 @@ public class UsherColorScreen extends ActionBarActivity {
             mHandler.removeCallbacks(updatePairedDevices);
             mHandler.postDelayed(updatePairedDevices, 1000);
 
-            //Open ServerSocket
-            BluetoothServerSocket tmp = null;
-            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("MYAPP",appUUID);
-            mServerSocket = tmp;
-//            BluetoothSocket socket = mServerSocket.accept();
-//            if(socket != null)
-//                manageConnectedSocket(socket);
-            //Start Accepting
-            acceptHandler.removeCallbacks(serverAcceptThread);
-            acceptHandler.postDelayed(serverAcceptThread, 1000);
+
         }
         else{
             Toast.makeText(getApplicationContext(),"Bluetooth is already on",Toast.LENGTH_LONG).show();
@@ -174,7 +188,19 @@ public class UsherColorScreen extends ActionBarActivity {
     }
 
     public void manageConnectedSocket(BluetoothSocket socket){
-        //do some stuff with the connected device info
+        byte[] ticketID = new byte[1024];
+        try{
+            InputStream inStream = socket.getInputStream();
+            OutputStream outStream = socket.getOutputStream();
+            inStream.read(ticketID);
+            outStream.write(1);
+            inStream.read();
+            outStream.write(1);
+            inStream.read();
+        }
+        catch(IOException e){
+
+        }
 
     }
 
