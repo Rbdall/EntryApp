@@ -40,10 +40,10 @@ public class FanSelectedTicket extends ActionBarActivity {
                 if(mConnection == null) {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     TextView ticketInformation = (TextView) findViewById(R.id.pairedText);
-                    ticketInformation.setText("You are paired with " + device.getAddress());
                     ConnectThread connection = new ConnectThread(device);
-                    connection.run();
+                    connection.start();
                     if(connection.getSocket() != null){
+                        ticketInformation.setText("You are connected with " + device.getAddress());
                         mConnection = connection.getSocket();
                         manageConnection();
                     }
