@@ -28,6 +28,8 @@ import java.util.UUID;
 public class FanSelectedTicket extends ActionBarActivity {
     private Ticket selectedTicket;
 
+    private UUID appUUID = java.util.UUID.fromString("a36f2eb8-2088-408d-9506-a6789838c1ce");
+
     private BluetoothSocket mConnection = null;
     private BluetoothAdapter mBluetoothAdapter;
 

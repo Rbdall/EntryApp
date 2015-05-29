@@ -21,8 +21,11 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.UUID;
 
 public class UsherColorScreen extends ActionBarActivity {
+
+    private UUID appUUID = java.util.UUID.fromString("a36f2eb8-2088-408d-9506-a6789838c1ce");
 
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter mBluetoothAdapter;
@@ -148,7 +151,7 @@ public class UsherColorScreen extends ActionBarActivity {
 
             //Open ServerSocket
             BluetoothServerSocket tmp = null;
-            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("MYAPP",MY_UUID);
+            tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("MYAPP",appUUID);
             mServerSocket = tmp;
 //            BluetoothSocket socket = mServerSocket.accept();
 //            if(socket != null)
