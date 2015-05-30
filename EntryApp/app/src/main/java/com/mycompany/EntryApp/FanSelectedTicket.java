@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,8 +36,30 @@ public class FanSelectedTicket extends ActionBarActivity {
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothManager mBluetoothManager;
 
-    private final Handler mHandler = new Handler(){
+    private int[] mPossibleColors = {Color.YELLOW, Color.RED, Color.MAGENTA, Color.GREEN,
+                                     Color.BLACK, Color.BLUE, Color.CYAN};
 
+
+    public static final int COLOR_SET = 1;
+    public static final int TICKET_VALIDATED = 2;
+    private final Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case COLOR_SET:
+                    FrameLayout colorView = (FrameLayout) findViewById(R.id.ColorView);
+                    Log.d("EntryApp", "Arg 1: " + msg.arg1);
+                    Log.d("EntryApp", "Arg 2: " + msg.arg2);
+                    colorView.setBackgroundColor(mPossibleColors[msg.arg1]);
+                    break;
+                case TICKET_VALIDATED:
+                    Intent i = new Intent(getApplicationContext(), ValidatedTicket.class);
+                    startActivity(i);
+                    finish();
+                    break;
+
+            }
+        }
     };
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -99,7 +122,7 @@ public class FanSelectedTicket extends ActionBarActivity {
                             startActivityForResult(enableBtIntent, 0);
                     }
 
-                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler);
+                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, true);
                     Intent discoverableIntent;
 
                     // Register the BroadcastReceiver

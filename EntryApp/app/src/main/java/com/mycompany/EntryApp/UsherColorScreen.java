@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,12 +44,23 @@ public class UsherColorScreen extends ActionBarActivity {
     private ArrayAdapter<String> BTArrayAdapter;
     private Button onButton;
     private Button offButton;
-    private Handler mHandler = new Handler();
     private Handler acceptHandler = new Handler();
     private BluetoothServerSocket mServerSocket;
 
     private BluetoothManager mBluetoothManager;
 
+    public static final int COLOR_SET = 1;
+
+    private final Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case COLOR_SET:
+                    Button validateButton = (Button) findViewById(R.id.ValidationButton);
+                    validateButton.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +69,26 @@ public class UsherColorScreen extends ActionBarActivity {
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        final Button validateButton = (Button) findViewById(R.id.ValidationButton);
+        validateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                byte[] arr = new byte[1024];
+                arr[0] = 4;
+                mBluetoothManager.write(arr);
+                validateButton.setVisibility(View.GONE);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManager.reset();
+                        mBluetoothManager.start();
+                    }
+                }, 1000);
+
+            }
+        });
+
         showProgressBar(false);
 
         Switch search = (Switch) findViewById(R.id.ScanSwitch);
@@ -63,8 +96,8 @@ public class UsherColorScreen extends ActionBarActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 showProgressBar(isChecked);
-                if(isChecked) {
-                    if(mBluetoothAdapter == null){
+                if (isChecked) {
+                    if (mBluetoothAdapter == null) {
                         //Toast.makeText(findViewById(R.id.TicketText), "Your device does not support Bluetooth connections", Toast.LENGTH_LONG);
                         finish();
                         return;
@@ -74,7 +107,7 @@ public class UsherColorScreen extends ActionBarActivity {
                         startActivityForResult(enableBtIntent, 0);
                     }
 
-                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler);
+                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, false);
 
                     if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                         Intent discoverableIntent;
@@ -86,16 +119,14 @@ public class UsherColorScreen extends ActionBarActivity {
                     mBluetoothManager.start();
 
 
-
-                }
-                else{
+                } else {
                     mBluetoothManager.reset();
                     mBluetoothManager = null;
                     if (mBluetoothAdapter == null) {
                         //Nothing to turn off
                         return;
                     }
-                    if(mBluetoothAdapter.isEnabled()){
+                    if (mBluetoothAdapter.isEnabled()) {
                         mBluetoothAdapter.disable();
                     }
                 }

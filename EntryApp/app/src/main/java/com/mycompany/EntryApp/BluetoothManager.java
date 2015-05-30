@@ -6,10 +6,12 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
 /**
@@ -17,6 +19,9 @@ import java.util.UUID;
  */
 public class BluetoothManager {
     private boolean DEBUG_MODE = true;
+
+    //boolean which defines behavior of connected manager
+    private boolean mFanManager;
 
     //UUID for the application
     private final UUID appUUID = java.util.UUID.fromString("a36f2eb8-2088-408d-9506-a6789838c1ce");
@@ -39,10 +44,17 @@ public class BluetoothManager {
     public static final int STATE_CONNECTED = 3;
 
     //Constructor, initializes state and adapter
-    public BluetoothManager(Context context, Handler handler){
+    public BluetoothManager(Context context, Handler handler, boolean fanMode){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_START;
         mHandler = handler;
+        mFanManager = fanMode;
+    }
+
+    public void write(byte[] buffer){
+        if(mConnectedThread != null){
+            mConnectedThread.write(buffer);
+        }
     }
 
     private synchronized void setState(int state){
@@ -242,6 +254,7 @@ public class BluetoothManager {
             catch(Exception e){
                 Log.d(appName, "Connect thread could not connect");
                 try{
+                    mBluetoothAdapter.startDiscovery();
                     mmSocket.close();
                 }
                 catch(Exception e2){
@@ -301,16 +314,46 @@ public class BluetoothManager {
             }
             byte[] buffer = new byte[1024];
             int bytes;
-            while(true){
+            if(mFanManager){
                 try{
                     bytes = mmInStream.read(buffer);
-                    //DO SOMETHING
+                    Log.d(appName, "Fan recieved color " + buffer[0]);
+                    mHandler.obtainMessage(FanSelectedTicket.COLOR_SET, buffer[0], -1, null).sendToTarget();
+                    Log.d(appName, "Fan ack");
+                    mmOutStream.write("ACK".getBytes());
+                    byte[] valid = new byte[1024];
+                    while(true){
+                        mmInStream.read(valid);
+                        if(valid[0] == 4){
+                            break;
+                        }
+                    }
+
+                    Log.d(appName, "Fan recieved validation " + new String(valid, "UTF-8"));
+                    mmOutStream.write("ACK".getBytes());
+                    mHandler.obtainMessage(FanSelectedTicket.TICKET_VALIDATED).sendToTarget();
+
                 }
                 catch(Exception e){
                     Log.e(appName, "Can't read in connected thread");
-                    break;
                 }
             }
+            else{
+                try{
+                    Log.d(appName, "Usher writing color");
+                    int color = (int)(Math.random()*6);
+                    buffer[0] = (byte) color;
+                    mmOutStream.write(buffer);
+                    bytes = mmInStream.read(buffer);
+                    Log.d(appName, "Usher recieved ack " + new String(buffer, "UTF-8"));
+                    mHandler.obtainMessage(UsherColorScreen.COLOR_SET, color, -1, null).sendToTarget();
+                    mmInStream.read();
+                }
+                catch(Exception e){
+                    Log.e(appName, "Can't read in connected thread");
+                }
+            }
+
         }
 
         public void write(byte[] buffer){
