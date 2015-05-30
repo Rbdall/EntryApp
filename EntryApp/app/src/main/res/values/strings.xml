@@ -9,4 +9,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_fan_selected_ticket">Selected Ticket</string>
     <string name="title_activity_validated_ticket">ValidatedTicket</string>
+    <string name="title_activity_usher_validated_ticket_list">UsherValidatedTicketList</string>
 </resources>

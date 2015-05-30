@@ -5,13 +5,21 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.widget.FrameLayout;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -36,6 +44,7 @@ public class BluetoothManager {
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
     private int mManagerID;
+    private Ticket mTicket;
 
     //Constants to express current state
     private int mState;
@@ -51,6 +60,15 @@ public class BluetoothManager {
         mHandler = handler;
         mFanManager = fanMode;
         mManagerID = id;
+        mTicket = null;
+    }
+
+    public void setTicket(Ticket ticket){
+        mTicket = ticket;
+    }
+
+    public void clearTicket(){
+        mTicket = null;
     }
 
     public void write(byte[] buffer){
@@ -318,22 +336,35 @@ public class BluetoothManager {
             int bytes;
             if(mFanManager){
                 try{
+                    Log.d(appName, "Fan writing ticket: " + mTicket.getTicketID());
+                    mmOutStream.write(objToBytes(mTicket));
                     bytes = mmInStream.read(buffer);
                     Log.d(appName, "Fan recieved color " + buffer[0]);
                     mHandler.obtainMessage(FanSelectedTicket.COLOR_SET, buffer[0], -1, null).sendToTarget();
                     Log.d(appName, "Fan ack");
+                    buffer = new byte[1024];
+
                     mmOutStream.write("ACK".getBytes());
-                    byte[] valid = new byte[1024];
+
+                    ValidatedTicket ticketResponse;
                     while(true){
-                        mmInStream.read(valid);
-                        if(valid[0] == 4){
-                            break;
+                        mmInStream.read(buffer);
+                        try {
+                            ticketResponse = (ValidatedTicket) bytesToObj(buffer);
+                            if(ticketResponse.isValidTicket()){
+                                break;
+                            }
+                            buffer = new byte[1024];
                         }
+                        catch(Exception e){
+
+                        }
+
                     }
 
-                    Log.d(appName, "Fan recieved validation " + new String(valid, "UTF-8"));
+                    Log.d(appName, "Fan recieved validation " + new String(buffer, "UTF-8"));
                     mmOutStream.write("ACK".getBytes());
-                    mHandler.obtainMessage(FanSelectedTicket.TICKET_VALIDATED).sendToTarget();
+                    mHandler.obtainMessage(FanSelectedTicket.TICKET_VALIDATED, ticketResponse).sendToTarget();
 
                 }
                 catch(Exception e){
@@ -343,13 +374,26 @@ public class BluetoothManager {
             }
             else{
                 try{
+                    Log.d(appName, "Usher reading ticket data");
+                    mmInStream.read(buffer);
+                    Ticket ticket = (Ticket) bytesToObj(buffer);
+
+                    Log.d(appName, "Usher recieved ticket: " + ticket.getTicketID());
+                    buffer = new byte[1024];
+
+                    //This is where we would do computation to ensure the ticket is valid
+
                     Log.d(appName, "Usher writing color");
                     int color = (int)(Math.random()*6);
                     buffer[0] = (byte) color;
                     mmOutStream.write(buffer);
+                    buffer = new byte[1024];
+
                     bytes = mmInStream.read(buffer);
+
                     Log.d(appName, "Usher recieved ack " + new String(buffer, "UTF-8"));
-                    mHandler.obtainMessage(UsherColorScreen.COLOR_SET, color, mManagerID, null).sendToTarget();
+                    mHandler.obtainMessage(UsherColorScreen.COLOR_SET, color, mManagerID, ticket).sendToTarget();
+                    buffer = new byte[1024];
                     mmInStream.read();
                 }
                 catch(Exception e){
@@ -379,4 +423,20 @@ public class BluetoothManager {
             }
         }
     }
+
+    public static byte[] objToBytes(Object obj) throws IOException{
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(out);
+        os.writeObject(obj);
+        return out.toByteArray();
+    }
+
+    public static Object bytesToObj(byte[] data) throws IOException, ClassNotFoundException{
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        return is.readObject();
+    }
+
 }
+
+

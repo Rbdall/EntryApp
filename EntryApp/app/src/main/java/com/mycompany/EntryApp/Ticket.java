@@ -1,6 +1,9 @@
 package com.mycompany.EntryApp;
 
+import android.bluetooth.BluetoothDevice;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by ryan on 5/19/15.
@@ -25,6 +28,8 @@ public class Ticket implements Serializable{
         this.ticketHolder=ticketHolder;
         this.validTicket = validTicket;
     }
+
+    public Ticket(){}
 
     public String getTicketName(){
         return ticketName;
@@ -63,3 +68,5 @@ public class Ticket implements Serializable{
     }
 
 }
+
+

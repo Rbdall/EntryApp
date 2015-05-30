@@ -19,14 +19,9 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 
 public class FanSelectedTicket extends ActionBarActivity {
@@ -53,7 +48,9 @@ public class FanSelectedTicket extends ActionBarActivity {
                     colorView.setBackgroundColor(mPossibleColors[msg.arg1]);
                     break;
                 case TICKET_VALIDATED:
-                    Intent i = new Intent(getApplicationContext(), ValidatedTicket.class);
+                    ValidatedTicket ticket = (ValidatedTicket) msg.obj;
+                    Intent i = new Intent(getApplicationContext(), FanValidatedTicket.class);
+                    i.putExtra("TicketInfo", ticket);
                     startActivity(i);
                     finish();
                     break;
@@ -74,7 +71,7 @@ public class FanSelectedTicket extends ActionBarActivity {
     };
     private class changeScreen extends TimerTask{
         public void run(){
-            Intent i = new Intent(getApplicationContext(), ValidatedTicket.class);
+            Intent i = new Intent(getApplicationContext(), FanValidatedTicket.class);
             startActivity(i);
             finish();
         }
@@ -123,6 +120,7 @@ public class FanSelectedTicket extends ActionBarActivity {
                     }
 
                     mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, true, 0);
+                    mBluetoothManager.setTicket(selectedTicket);
                     Intent discoverableIntent;
 
                     // Register the BroadcastReceiver

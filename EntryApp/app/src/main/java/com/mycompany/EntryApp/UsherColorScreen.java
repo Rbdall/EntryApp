@@ -29,6 +29,9 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.Timer;
 import java.util.UUID;
@@ -38,6 +41,8 @@ public class UsherColorScreen extends ActionBarActivity {
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter mBluetoothAdapter;
 
+    private Ticket[] mCurrentTickets = new Ticket[6];
+    private LinkedList<ValidatedTicket> mValidatedTickets = new LinkedList<ValidatedTicket>();
     private BluetoothManager[] mBluetoothManagers = new BluetoothManager[6];
 
     private void initializeManagers(){
@@ -64,8 +69,6 @@ public class UsherColorScreen extends ActionBarActivity {
         }
     }
 
-    private BluetoothManager mBluetoothManager;
-
     public static final int COLOR_SET = 1;
 
     private int ticketToValidate = 1;
@@ -77,6 +80,8 @@ public class UsherColorScreen extends ActionBarActivity {
                     Button validateButton = (Button) findViewById(R.id.ValidationButton);
                     validateButton.setVisibility(View.VISIBLE);
                     ticketToValidate = msg.arg2;
+                    mCurrentTickets[ticketToValidate] = (Ticket) msg.obj;
+
             }
         }
     };
@@ -94,7 +99,18 @@ public class UsherColorScreen extends ActionBarActivity {
             public void onClick(View v) {
                 byte[] arr = new byte[1024];
                 arr[0] = 4;
-                mBluetoothManagers[ticketToValidate].write(arr);
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[ticketToValidate],
+                                                                    new Date(),
+                                                                    mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[ticketToValidate].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[ticketToValidate] = null;
                 validateButton.setVisibility(View.GONE);
 
                 mHandler.postDelayed(new Runnable() {
@@ -185,6 +201,13 @@ public class UsherColorScreen extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == com.mycompany.EntryApp.R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.history_list) {
+            Intent i = new Intent(getApplicationContext(), UsherValidatedTicketList.class);
+            i.putExtra("TicketList", mValidatedTickets);
+            startActivity(i);
             return true;
         }
 

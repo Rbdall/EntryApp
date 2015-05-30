@@ -4,7 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.mycompany.EntryApp.ValidatedTicket"
+    tools:context="com.mycompany.EntryApp.FanValidatedTicket"
     android:id="@+id/ValidatedView"
     android:background="#ff00ff3f">
 
@@ -15,9 +15,11 @@
         android:text="Your ticket has been validated"
         android:id="@+id/textView"
         android:textColor="#ffffffff"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/textView2"
-        android:layout_alignStart="@+id/textView2" />
+        android:layout_alignStart="@+id/textView2"
+        android:layout_marginTop="104dp"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,4 +30,13 @@
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:textColor="#ffffffff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="20dp" />
 </RelativeLayout>

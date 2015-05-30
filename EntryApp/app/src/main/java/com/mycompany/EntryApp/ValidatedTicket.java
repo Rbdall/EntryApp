@@ -1,43 +1,45 @@
 package com.mycompany.EntryApp;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.bluetooth.BluetoothDevice;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class ValidatedTicket extends ActionBarActivity {
+/**
+ * Created by ryan on 5/30/15.
+ */
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_validated_ticket);
+public class ValidatedTicket extends Ticket{
+    private Date mDate;
+    private String mMACAddress;
+
+    public ValidatedTicket(String ticketName, String venueName, String eventDate, String seatLocation,
+                      String ticketID, String ticketHolder, boolean validTicket, Date time, String address){
+        super(ticketName, venueName, eventDate, seatLocation, ticketID, ticketHolder, validTicket);
+        mDate = time;
+        mMACAddress = address;
     }
 
-    /*@Override
-    public void onBackPressed(){
-        return;
-    }*/
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_validated_ticket, menu);
-        return true;
+    public ValidatedTicket(Ticket ticket, Date time, String address){
+        super(ticket.getTicketName(), ticket.getVenueName(), ticket.getEventDate(),
+                ticket.getSeatLocation(), ticket.getTicketID(), ticket.getTicketHolder(),
+                ticket.isValidTicket());
+        mDate = time;
+        mMACAddress = address;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public Date getValidationTime(){
+        return mDate;
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+    public String getAddress(){
+        return mMACAddress;
+    }
 
-        return super.onOptionsItemSelected(item);
+    public String toString(){
+        DateFormat df = new SimpleDateFormat("HH:mm:ss MM/dd/yyyy");
+        return "Ticket validated at: " + df.format(mDate) + " by device: " + mMACAddress
+                + '\n' + '\n' + super.toString();
     }
 }

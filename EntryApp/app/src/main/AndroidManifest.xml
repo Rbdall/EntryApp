@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +13,7 @@
         android:label="EntryApp"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.mycompany.EntryApp.MyActivity"
+            android:name=".MyActivity"
             android:label="EntryApp" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,24 +22,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mycompany.EntryApp.UsherColorScreen"
+            android:name=".UsherColorScreen"
             android:label="@string/title_activity_usher_color_screen" >
         </activity>
         <activity
-            android:name="com.mycompany.EntryApp.TicketList"
+            android:name=".TicketList"
             android:label="@string/title_activity_ticket_list" >
         </activity>
         <activity
-            android:name="com.mycompany.EntryApp.FanSelectedTicket"
+            android:name=".FanSelectedTicket"
             android:label="@string/title_activity_fan_selected_ticket" >
         </activity>
         <activity
-            android:name="com.mycompany.EntryApp.ValidatedTicket"
+            android:name=".FanValidatedTicket"
             android:label="@string/title_activity_validated_ticket" >
         </activity>
+        <activity
+            android:name=".UsherValidatedTicketList"
+            android:label="@string/title_activity_usher_validated_ticket_list" >
+        </activity>
     </application>
-
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
 </manifest>
