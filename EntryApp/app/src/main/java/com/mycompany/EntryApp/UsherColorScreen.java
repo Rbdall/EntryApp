@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,13 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
+import java.util.Timer;
 import java.util.UUID;
 
 public class UsherColorScreen extends ActionBarActivity {
@@ -42,33 +48,6 @@ public class UsherColorScreen extends ActionBarActivity {
 
     private BluetoothManager mBluetoothManager;
 
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                // add the name and the MAC address of the object to the arrayAdapter
-                BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-
-                //BTArrayAdapter.notifyDataSetChanged();
-                //Open ServerSocket
-               /* BluetoothServerSocket tmp = null;
-                try {
-                    tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("MYAPP", appUUID);
-                    mServerSocket = tmp;
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }*/
-//            BluetoothSocket socket = mServerSocket.accept();
-//            if(socket != null)
-//                manageConnectedSocket(socket);
-                //Start Accepting
-                //acceptHandler.removeCallbacks(serverAcceptThread);
-                //acceptHandler.postDelayed(serverAcceptThread, 1000);
-            }
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,64 +55,66 @@ public class UsherColorScreen extends ActionBarActivity {
         setContentView(com.mycompany.EntryApp.R.layout.activity_usher_color_screen);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(mBluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(),"This device does not support Bluetooth.", Toast.LENGTH_LONG).show();
-        } else {
-            mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler);
-            onButton = (Button)findViewById(com.mycompany.EntryApp.R.id.onButton);
-            onButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            try {
-                                                on(v);
-                                            } catch (IOException e) {
-                                                //
-                                            }
-                                        }
-                                     });
-            offButton = (Button)findViewById(com.mycompany.EntryApp.R.id.offButton);
-            offButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    off(v);
+
+        showProgressBar(false);
+
+        Switch search = (Switch) findViewById(R.id.ScanSwitch);
+        search.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                showProgressBar(isChecked);
+                if(isChecked) {
+                    if(mBluetoothAdapter == null){
+                        //Toast.makeText(findViewById(R.id.TicketText), "Your device does not support Bluetooth connections", Toast.LENGTH_LONG);
+                        finish();
+                        return;
+                    }
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, 0);
+                    }
+
+                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler);
+
+                    if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                        Intent discoverableIntent;
+                        discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
+                        startActivity(discoverableIntent);
+                    }
+
+                    mBluetoothManager.start();
+
+
+
                 }
-            });
+                else{
+                    mBluetoothManager.reset();
+                    mBluetoothManager = null;
+                    if (mBluetoothAdapter == null) {
+                        //Nothing to turn off
+                        return;
+                    }
+                    if(mBluetoothAdapter.isEnabled()){
+                        mBluetoothAdapter.disable();
+                    }
+                }
 
-
-            //Set the BTArrayAdapter to the listview for debugging purposes
-            myListView = (ListView)findViewById(com.mycompany.EntryApp.R.id.listView1);
-            BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-            myListView.setAdapter(BTArrayAdapter);
-
-
-        }
+            }
+        });
 
 
     }
 
-    private Runnable serverAcceptThread = new Runnable() {
-        @Override
-        public void run() {
-            BluetoothSocket socket = null;
-            while(true){
-                try {
-                    socket = mServerSocket.accept();
-                } catch (IOException e) {break;}
-                if(socket != null){
-                    manageConnectedSocket(socket);
-                    //closing for now, will need to keep open late to accept more than one connection
-                    try {
-                        mServerSocket.close();
-                    } catch (IOException e) {e.printStackTrace();}
-                }
-
-            }
-
-             //       mServerSocket.accept();
-            if(socket != null)
-                manageConnectedSocket(socket);
+    private void showProgressBar(boolean shouldShow){
+        ProgressBar wheel = (ProgressBar) findViewById(R.id.progressBar2);
+        if(shouldShow){
+            wheel.setVisibility(View.VISIBLE);
         }
-    };
+        else{
+            wheel.setVisibility(View.INVISIBLE);
+        }
+    }
 
     //Shouldn't need this for final app, only for debugging discoverability
     private Runnable updatePairedDevices = new Runnable() {
@@ -149,60 +130,6 @@ public class UsherColorScreen extends ActionBarActivity {
         }
     };
 
-    //Turn Bluetooth On if not already
-    public void on(View view) throws IOException {
-        if (!mBluetoothAdapter.isEnabled()){
-            Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnOnIntent, 0);
-
-            //Start discovery
-            BTArrayAdapter.clear();
-
-            //registerReceiver(mReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
-
-            mBluetoothManager.start();
-
-            //don't think we need this for the server side
-            //mBluetoothAdapter.startDiscovery();
-
-            //Start Handler to update grid
-            mHandler.removeCallbacks(updatePairedDevices);
-            mHandler.postDelayed(updatePairedDevices, 1000);
-
-
-        }
-        else{
-            Toast.makeText(getApplicationContext(),"Bluetooth is already on",Toast.LENGTH_LONG).show();
-        }
-    }
-    //Turn Bluetooth Off if not already
-    public void off(View view){
-        if (mBluetoothAdapter.isEnabled()){
-            //mBluetoothAdapter.cancelDiscovery();
-            unregisterReceiver(mReceiver);
-            mBluetoothAdapter.disable();
-        }
-    }
-
-    public void manageConnectedSocket(BluetoothSocket socket){
-        byte[] ticketID = new byte[1024];
-        try{
-            InputStream inStream = socket.getInputStream();
-            OutputStream outStream = socket.getOutputStream();
-            inStream.read(ticketID);
-            outStream.write(1);
-            inStream.read();
-            outStream.write(1);
-            inStream.read();
-        }
-        catch(IOException e){
-
-        }
-
-    }
 
 
 

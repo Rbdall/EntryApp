@@ -106,9 +106,9 @@ public class FanSelectedTicket extends ActionBarActivity {
                     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                     registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 
-                    discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                    /*discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                     discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-                    startActivity(discoverableIntent);
+                    startActivity(discoverableIntent);*/
                     mBluetoothAdapter.startDiscovery();
 
 
