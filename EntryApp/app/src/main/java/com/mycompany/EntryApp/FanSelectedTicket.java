@@ -122,7 +122,7 @@ public class FanSelectedTicket extends ActionBarActivity {
                             startActivityForResult(enableBtIntent, 0);
                     }
 
-                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, true);
+                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, true, 0);
                     Intent discoverableIntent;
 
                     // Register the BroadcastReceiver

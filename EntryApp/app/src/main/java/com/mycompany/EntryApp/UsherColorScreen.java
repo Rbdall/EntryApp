@@ -35,22 +35,40 @@ import java.util.UUID;
 
 public class UsherColorScreen extends ActionBarActivity {
 
-    private UUID appUUID = java.util.UUID.fromString("a36f2eb8-2088-408d-9506-a6789838c1ce");
-
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter mBluetoothAdapter;
-    private Set<BluetoothDevice> pairedDevices;
-    private ListView myListView;
-    private ArrayAdapter<String> BTArrayAdapter;
-    private Button onButton;
-    private Button offButton;
-    private Handler acceptHandler = new Handler();
-    private BluetoothServerSocket mServerSocket;
+
+    private BluetoothManager[] mBluetoothManagers = new BluetoothManager[6];
+
+    private void initializeManagers(){
+        for(int i = 0; i < 6; i++){
+            mBluetoothManagers[i] = new BluetoothManager(getApplicationContext(), mHandler, false, i);
+        }
+    }
+
+    private void resetManagers(){
+        for(int i = 0; i < 6; i++){
+            mBluetoothManagers[i].reset();
+        }
+    }
+
+    private void startManagers(){
+        for(int i = 0; i < 6; i++){
+            mBluetoothManagers[i].start();
+        }
+    }
+
+    private void killManagers(){
+        for(int i = 0; i < 6; i++){
+            mBluetoothManagers[i] = null;
+        }
+    }
 
     private BluetoothManager mBluetoothManager;
 
     public static final int COLOR_SET = 1;
 
+    private int ticketToValidate = 1;
     private final Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
@@ -58,6 +76,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 case COLOR_SET:
                     Button validateButton = (Button) findViewById(R.id.ValidationButton);
                     validateButton.setVisibility(View.VISIBLE);
+                    ticketToValidate = msg.arg2;
             }
         }
     };
@@ -75,14 +94,14 @@ public class UsherColorScreen extends ActionBarActivity {
             public void onClick(View v) {
                 byte[] arr = new byte[1024];
                 arr[0] = 4;
-                mBluetoothManager.write(arr);
+                mBluetoothManagers[ticketToValidate].write(arr);
                 validateButton.setVisibility(View.GONE);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mBluetoothManager.reset();
-                        mBluetoothManager.start();
+                        mBluetoothManagers[ticketToValidate].reset();
+                        mBluetoothManagers[ticketToValidate].start();
                     }
                 }, 1000);
 
@@ -107,7 +126,8 @@ public class UsherColorScreen extends ActionBarActivity {
                         startActivityForResult(enableBtIntent, 0);
                     }
 
-                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, false);
+                    //mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, false);
+                    initializeManagers();
 
                     if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                         Intent discoverableIntent;
@@ -115,13 +135,12 @@ public class UsherColorScreen extends ActionBarActivity {
                         discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
                         startActivity(discoverableIntent);
                     }
-
-                    mBluetoothManager.start();
+                    startManagers();
 
 
                 } else {
-                    mBluetoothManager.reset();
-                    mBluetoothManager = null;
+                    resetManagers();
+                    killManagers();
                     if (mBluetoothAdapter == null) {
                         //Nothing to turn off
                         return;
@@ -146,20 +165,6 @@ public class UsherColorScreen extends ActionBarActivity {
             wheel.setVisibility(View.INVISIBLE);
         }
     }
-
-    //Shouldn't need this for final app, only for debugging discoverability
-    private Runnable updatePairedDevices = new Runnable() {
-        @Override
-        public void run() {
-            pairedDevices = mBluetoothAdapter.getBondedDevices();
-            for(BluetoothDevice device : pairedDevices)
-                BTArrayAdapter.add(device.getName()+'\n'+ device.getAddress());
-            Toast.makeText(getApplicationContext(), "Supposed to be showing Paired Devices.",Toast.LENGTH_LONG).show();
-
-            if(!mBluetoothAdapter.isEnabled())
-                mHandler.postDelayed(this,1000);
-        }
-    };
 
 
 

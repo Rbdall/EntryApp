@@ -35,6 +35,7 @@ public class BluetoothManager {
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
     private ConnectedThread mConnectedThread;
+    private int mManagerID;
 
     //Constants to express current state
     private int mState;
@@ -44,11 +45,12 @@ public class BluetoothManager {
     public static final int STATE_CONNECTED = 3;
 
     //Constructor, initializes state and adapter
-    public BluetoothManager(Context context, Handler handler, boolean fanMode){
+    public BluetoothManager(Context context, Handler handler, boolean fanMode, int id){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_START;
         mHandler = handler;
         mFanManager = fanMode;
+        mManagerID = id;
     }
 
     public void write(byte[] buffer){
@@ -336,6 +338,7 @@ public class BluetoothManager {
                 }
                 catch(Exception e){
                     Log.e(appName, "Can't read in connected thread");
+                    clientConnectionFailed();
                 }
             }
             else{
@@ -346,11 +349,12 @@ public class BluetoothManager {
                     mmOutStream.write(buffer);
                     bytes = mmInStream.read(buffer);
                     Log.d(appName, "Usher recieved ack " + new String(buffer, "UTF-8"));
-                    mHandler.obtainMessage(UsherColorScreen.COLOR_SET, color, -1, null).sendToTarget();
+                    mHandler.obtainMessage(UsherColorScreen.COLOR_SET, color, mManagerID, null).sendToTarget();
                     mmInStream.read();
                 }
                 catch(Exception e){
                     Log.e(appName, "Can't read in connected thread");
+                    serverConnectionFailed();
                 }
             }
 
