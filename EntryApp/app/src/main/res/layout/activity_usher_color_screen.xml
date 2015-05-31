@@ -32,4 +32,84 @@
         android:layout_centerHorizontal="true"
         android:enabled="true"
         android:visibility="gone" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnGreen"
+        android:background="#ff00ff00"
+        android:minHeight="110dp"
+        android:maxHeight="110dp"
+        android:maxWidth="110dp"
+        android:minWidth="110dp"
+        android:layout_marginTop="36dp"
+        android:layout_toLeftOf="@+id/ScanSwitch" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnBlue"
+        android:background="#ff0000ff"
+        android:minHeight="110dp"
+        android:maxHeight="110dp"
+        android:maxWidth="110dp"
+        android:minWidth="110dp"
+        android:layout_above="@+id/ScanSwitch"
+        android:layout_toLeftOf="@+id/ScanSwitch"
+        android:layout_toStartOf="@+id/ScanSwitch"
+        android:layout_marginBottom="22dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRed"
+        android:background="#ffff0000"
+        android:minHeight="110dp"
+        android:maxHeight="110dp"
+        android:maxWidth="110dp"
+        android:minWidth="110dp"
+        android:layout_marginTop="33dp"
+        android:layout_below="@+id/btnGreen"
+        android:layout_alignLeft="@+id/btnGreen"
+        android:layout_alignStart="@+id/btnGreen" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnYellow"
+        android:background="#ffffff00"
+        android:minHeight="110dp"
+        android:maxHeight="110dp"
+        android:maxWidth="110dp"
+        android:minWidth="110dp"
+        android:layout_alignTop="@+id/btnGreen"
+        android:layout_toRightOf="@+id/progressBar2"
+        android:layout_toEndOf="@+id/progressBar2" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnPurple"
+        android:background="#ffff00ff"
+        android:minHeight="110dp"
+        android:maxHeight="110dp"
+        android:maxWidth="110dp"
+        android:minWidth="110dp"
+        android:layout_alignTop="@+id/btnRed"
+        android:layout_alignLeft="@+id/btnYellow"
+        android:layout_alignStart="@+id/btnYellow" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnOrange"
+        android:background="#ffff6600"
+        android:minHeight="110dp"
+        android:maxHeight="110dp"
+        android:maxWidth="110dp"
+        android:minWidth="110dp"
+        android:layout_alignTop="@+id/btnBlue"
+        android:layout_alignLeft="@+id/btnPurple"
+        android:layout_alignStart="@+id/btnPurple" />
+
 </RelativeLayout>
