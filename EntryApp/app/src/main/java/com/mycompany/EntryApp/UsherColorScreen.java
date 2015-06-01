@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -45,6 +46,9 @@ public class UsherColorScreen extends ActionBarActivity {
     private LinkedList<ValidatedTicket> mValidatedTickets = new LinkedList<ValidatedTicket>();
     private BluetoothManager[] mBluetoothManagers = new BluetoothManager[6];
 
+    private int[] mPossibleColors = {Color.YELLOW, Color.RED, Color.MAGENTA, Color.GREEN,
+            Color.BLACK, Color.BLUE, Color.CYAN};
+
     private void initializeManagers(){
         for(int i = 0; i < 6; i++){
             mBluetoothManagers[i] = new BluetoothManager(getApplicationContext(), mHandler, false, i);
@@ -71,16 +75,39 @@ public class UsherColorScreen extends ActionBarActivity {
 
     public static final int COLOR_SET = 1;
 
-    private int ticketToValidate = 1;
     private final Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
             switch (msg.what){
                 case COLOR_SET:
-                    Button validateButton = (Button) findViewById(R.id.ValidationButton);
-                    validateButton.setVisibility(View.VISIBLE);
-                    ticketToValidate = msg.arg2;
-                    mCurrentTickets[ticketToValidate] = (Ticket) msg.obj;
+                    Button validateButton;
+                    switch(msg.arg2){
+                        case 0:
+                            validateButton = (Button) findViewById(R.id.UsherButton1);
+                            break;
+                        case 1:
+                            validateButton = (Button) findViewById(R.id.UsherButton2);
+                            break;
+                        case 2:
+                            validateButton = (Button) findViewById(R.id.UsherButton3);
+                            break;
+                        case 3:
+                            validateButton = (Button) findViewById(R.id.UsherButton4);
+                            break;
+                        case 4:
+                            validateButton = (Button) findViewById(R.id.UsherButton5);
+                            break;
+                        case 5:
+                            validateButton = (Button) findViewById(R.id.UsherButton6);
+                            break;
+                        default:
+                            Log.d("EntryApp", "BAD THINGS");
+                            return;
+                    }
+                    validateButton.setEnabled(true);
+                    validateButton.setBackgroundColor(mPossibleColors[msg.arg1]);
+                    mCurrentTickets[msg.arg2] = (Ticket) msg.obj;
+                    Log.d("EntryApp", "Ticket validated via Manager" + msg.arg2);
 
             }
         }
@@ -93,36 +120,7 @@ public class UsherColorScreen extends ActionBarActivity {
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        final Button validateButton = (Button) findViewById(R.id.ValidationButton);
-        validateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                byte[] arr = new byte[1024];
-                arr[0] = 4;
-
-                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[ticketToValidate],
-                                                                    new Date(),
-                                                                    mBluetoothAdapter.getAddress());
-                try {
-                    mBluetoothManagers[ticketToValidate].write(BluetoothManager.objToBytes(resultTicket));
-                }
-                catch(Exception e){
-
-                }
-                mValidatedTickets.addFirst(resultTicket);
-                mCurrentTickets[ticketToValidate] = null;
-                validateButton.setVisibility(View.GONE);
-
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mBluetoothManagers[ticketToValidate].reset();
-                        mBluetoothManagers[ticketToValidate].start();
-                    }
-                }, 1000);
-
-            }
-        });
+        initializeUsherButtons();
 
         showProgressBar(false);
 
@@ -170,6 +168,197 @@ public class UsherColorScreen extends ActionBarActivity {
         });
 
 
+    }
+
+    private void initializeUsherButtons(){
+        final Button usherButtonOne = (Button) findViewById(R.id.UsherButton1);
+        usherButtonOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[0],
+                        new Date(),
+                        mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[0].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[0] = null;
+                Button b = new Button(getApplicationContext());
+                Drawable d = b.getBackground();
+                usherButtonOne.setBackgroundDrawable(d);
+                usherButtonOne.setEnabled(false);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManagers[0].reset();
+                        mBluetoothManagers[0].start();
+                    }
+                }, 1000);
+
+            }
+        });
+        final Button usherButtonTwo = (Button) findViewById(R.id.UsherButton2);
+        usherButtonTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[1],
+                        new Date(),
+                        mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[1].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[1] = null;
+                Button b = new Button(getApplicationContext());
+                Drawable d = b.getBackground();
+                usherButtonTwo.setBackgroundDrawable(d);
+                usherButtonTwo.setEnabled(false);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManagers[1].reset();
+                        mBluetoothManagers[1].start();
+                    }
+                }, 1000);
+
+            }
+        });
+        final Button usherButtonThree = (Button) findViewById(R.id.UsherButton3);
+        usherButtonThree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[2],
+                        new Date(),
+                        mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[2].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[2] = null;
+                Button b = new Button(getApplicationContext());
+                Drawable d = b.getBackground();
+                usherButtonThree.setBackgroundDrawable(d);
+                usherButtonThree.setEnabled(false);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManagers[2].reset();
+                        mBluetoothManagers[2].start();
+                    }
+                }, 1000);
+
+            }
+        });
+        final Button usherButtonFour = (Button) findViewById(R.id.UsherButton4);
+        usherButtonFour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[3],
+                        new Date(),
+                        mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[3].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[3] = null;
+                Button b = new Button(getApplicationContext());
+                Drawable d = b.getBackground();
+                usherButtonFour.setBackgroundDrawable(d);
+                usherButtonFour.setEnabled(false);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManagers[3].reset();
+                        mBluetoothManagers[3].start();
+                    }
+                }, 1000);
+
+            }
+        });
+
+        final Button usherButtonFive = (Button) findViewById(R.id.UsherButton5);
+        usherButtonFive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[4],
+                        new Date(),
+                        mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[4].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[4] = null;
+                Button b = new Button(getApplicationContext());
+                Drawable d = b.getBackground();
+                usherButtonFive.setBackgroundDrawable(d);
+                usherButtonFive.setEnabled(false);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManagers[4].reset();
+                        mBluetoothManagers[4].start();
+                    }
+                }, 1000);
+
+            }
+        });
+
+        final Button usherButtonSix = (Button) findViewById(R.id.UsherButton6);
+        usherButtonSix.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ValidatedTicket resultTicket = new ValidatedTicket(mCurrentTickets[5],
+                        new Date(),
+                        mBluetoothAdapter.getAddress());
+                try {
+                    mBluetoothManagers[5].write(BluetoothManager.objToBytes(resultTicket));
+                }
+                catch(Exception e){
+
+                }
+                mValidatedTickets.addFirst(resultTicket);
+                mCurrentTickets[5] = null;
+                Button b = new Button(getApplicationContext());
+                Drawable d = b.getBackground();
+                usherButtonSix.setBackgroundDrawable(d);
+                usherButtonSix.setEnabled(false);
+
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBluetoothManagers[5].reset();
+                        mBluetoothManagers[5].start();
+                    }
+                }, 1000);
+
+            }
+        });
     }
 
     private void showProgressBar(boolean shouldShow){

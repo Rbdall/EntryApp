@@ -201,6 +201,7 @@ public class BluetoothManager {
 
             while(mState != STATE_CONNECTED){
                 try{
+                    Log.d(appName, "Manager" + mManagerID + " waiting to accept");
                     socket = mmSeverSocket.accept();
                 }
                 catch (Exception e){
@@ -210,6 +211,7 @@ public class BluetoothManager {
 
                 if(socket != null){
                     synchronized (BluetoothManager.this){
+                        Log.d(appName, "Manager" + mManagerID + " In sync");
                         switch(mState){
                             case STATE_ACCEPT:
                             case STATE_CONNECTING:

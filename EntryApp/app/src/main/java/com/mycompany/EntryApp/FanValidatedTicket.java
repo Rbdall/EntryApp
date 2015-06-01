@@ -24,9 +24,9 @@ public class FanValidatedTicket extends ActionBarActivity {
         }
         DateFormat df = new SimpleDateFormat("HH:mm:ss MM/dd/yyyy");
         TextView ticketInformation = (TextView) findViewById(R.id.textView3);
-        ticketInformation.setText("Your ticket " + mTicketInfo.getTicketID() +
-                                   " was validated at " + df.format(mTicketInfo.getValidationTime())
-                                    + " by device " + mTicketInfo.getAddress());
+        ticketInformation.setText("Your ticket (ID: " + mTicketInfo.getTicketID() +
+                                   ") was validated at: \n\t\t" + df.format(mTicketInfo.getValidationTime())
+                                    + "\n\n by device: \n\t\t" + mTicketInfo.getAddress());
 
         TextView firstMessage = (TextView) findViewById(R.id.textView);
         TextView secondMessage = (TextView) findViewById(R.id.textView2);
