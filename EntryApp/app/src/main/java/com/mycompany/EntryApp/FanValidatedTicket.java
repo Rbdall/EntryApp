@@ -1,5 +1,8 @@
 package com.mycompany.EntryApp;
 
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -58,6 +61,13 @@ public class FanValidatedTicket extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if(id == R.id.MAC){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("This is device: " + BluetoothAdapter.getDefaultAdapter().getAddress());
+            AlertDialog alert = builder.create();
+            alert.show();
         }
 
         return super.onOptionsItemSelected(item);

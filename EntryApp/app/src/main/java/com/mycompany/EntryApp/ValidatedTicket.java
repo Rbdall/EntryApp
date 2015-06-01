@@ -25,6 +25,7 @@ public class ValidatedTicket extends Ticket{
         super(ticket.getTicketName(), ticket.getVenueName(), ticket.getEventDate(),
                 ticket.getSeatLocation(), ticket.getTicketID(), ticket.getTicketHolder(),
                 ticket.isValidTicket());
+        super.setRedeemingDevice(ticket.getRedeemingDevice());
         mDate = time;
         mMACAddress = address;
     }
@@ -40,6 +41,7 @@ public class ValidatedTicket extends Ticket{
     public String toString(){
         DateFormat df = new SimpleDateFormat("HH:mm:ss MM/dd/yyyy");
         return "Ticket validated at: " + df.format(mDate) + " by device: " + mMACAddress
-                + '\n' + '\n' + super.toString();
+                + '\n' + '\n' + "Ticket redeemed on device: " + getRedeemingDevice() + '\n' + '\n' +
+                super.toString();
     }
 }

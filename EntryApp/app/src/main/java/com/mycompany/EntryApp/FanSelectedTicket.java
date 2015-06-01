@@ -88,6 +88,7 @@ public class FanSelectedTicket extends ActionBarActivity {
         TextView ticketInformation = (TextView) findViewById(R.id.TicketText);
         ticketInformation.setText(selectedTicket.toString());
 
+
         showProgressBar(false);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -118,7 +119,7 @@ public class FanSelectedTicket extends ActionBarActivity {
                             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                             startActivityForResult(enableBtIntent, 0);
                     }
-
+                    selectedTicket.setRedeemingDevice(mBluetoothAdapter.getAddress());
                     mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, true, 0);
                     mBluetoothManager.setTicket(selectedTicket);
                     Intent discoverableIntent;

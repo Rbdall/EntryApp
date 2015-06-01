@@ -172,6 +172,7 @@ public class UsherColorScreen extends ActionBarActivity {
 
     private void initializeUsherButtons(){
         final Button usherButtonOne = (Button) findViewById(R.id.UsherButton1);
+        usherButtonOne.setEnabled(false);
         usherButtonOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,6 +204,7 @@ public class UsherColorScreen extends ActionBarActivity {
             }
         });
         final Button usherButtonTwo = (Button) findViewById(R.id.UsherButton2);
+        usherButtonTwo.setEnabled(false);
         usherButtonTwo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,6 +236,7 @@ public class UsherColorScreen extends ActionBarActivity {
             }
         });
         final Button usherButtonThree = (Button) findViewById(R.id.UsherButton3);
+        usherButtonThree.setEnabled(false);
         usherButtonThree.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -265,6 +268,7 @@ public class UsherColorScreen extends ActionBarActivity {
             }
         });
         final Button usherButtonFour = (Button) findViewById(R.id.UsherButton4);
+        usherButtonFour.setEnabled(false);
         usherButtonFour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -297,6 +301,7 @@ public class UsherColorScreen extends ActionBarActivity {
         });
 
         final Button usherButtonFive = (Button) findViewById(R.id.UsherButton5);
+        usherButtonFive.setEnabled(false);
         usherButtonFive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -329,6 +334,7 @@ public class UsherColorScreen extends ActionBarActivity {
         });
 
         final Button usherButtonSix = (Button) findViewById(R.id.UsherButton6);
+        usherButtonSix.setEnabled(false);
         usherButtonSix.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

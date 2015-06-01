@@ -16,6 +16,7 @@ public class Ticket implements Serializable{
     private String ticketID;
     private String ticketHolder;
     private boolean validTicket;
+    private String redeemingDevice;
 
 
     public Ticket(String ticketName, String venueName, String eventDate, String seatLocation,
@@ -53,6 +54,12 @@ public class Ticket implements Serializable{
 
     public String getTicketHolder(){
         return ticketHolder;
+    }
+
+    public String getRedeemingDevice() {return redeemingDevice;}
+
+    public void setRedeemingDevice(String device){
+        redeemingDevice = device;
     }
 
     public boolean isValidTicket(){
