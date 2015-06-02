@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 
 public class FanSelectedTicket extends ActionBarActivity {
@@ -34,6 +35,7 @@ public class FanSelectedTicket extends ActionBarActivity {
     private int[] mPossibleColors = {Color.YELLOW, Color.RED, Color.MAGENTA, Color.GREEN,
                                      Color.BLACK, Color.BLUE, Color.CYAN};
 
+    public static final int BLUETOOTH_ON = 0;
 
     public static final int COLOR_SET = 1;
     public static final int TICKET_VALIDATED = 2;
@@ -59,13 +61,40 @@ public class FanSelectedTicket extends ActionBarActivity {
         }
     };
 
+    public static String[] Possible_UUIDs = {"a36f2eb8-2088-408d-9506-a6789838c1ca",
+                                             "a36f2eb8-2088-408d-9506-a6789838c1cb",
+                                             "a36f2eb8-2088-408d-9506-a6789838c1cc",
+                                             "a36f2eb8-2088-408d-9506-a6789838c1cd",
+                                             "a36f2eb8-2088-408d-9506-a6789838c1ce",
+                                             "a36f2eb8-2088-408d-9506-a6789838c1cf"};
+
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if(BluetoothDevice.ACTION_FOUND.equals(action)){
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                mBluetoothManager.connect(device);
+                for(int i = 0; i < 6; i++){
+                    Log.d("EntryApp", "Trying to connect to UUID " + i);
+                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler,
+                            true, 0, java.util.UUID.fromString(Possible_UUIDs[i]));
+                    mBluetoothManager.setTicket(selectedTicket);
+                    mBluetoothManager.connect(device);
+                    try{
+                        wait(200);
+                    }catch(Exception e){
+
+                    }
+                    if(mBluetoothManager.getState() == BluetoothManager.STATE_CONNECTED
+                            || mBluetoothManager.getState() == BluetoothManager.STATE_CONNECTING){
+                        Log.d("EntryApp", "Connected to UUID " + i);
+                        break;
+                    }
+
+                    Log.d("EntryApp", "Failed to connect to UUID " + i);
+
+                }
+
             }
         }
     };
@@ -117,21 +146,22 @@ public class FanSelectedTicket extends ActionBarActivity {
                     }
                     if (!mBluetoothAdapter.isEnabled()) {
                             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                            startActivityForResult(enableBtIntent, 0);
+                            startActivityForResult(enableBtIntent, BLUETOOTH_ON);
                     }
-                    selectedTicket.setRedeemingDevice(mBluetoothAdapter.getAddress());
-                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, true, 0);
-                    mBluetoothManager.setTicket(selectedTicket);
-                    Intent discoverableIntent;
+                    else {
+                        selectedTicket.setRedeemingDevice(mBluetoothAdapter.getAddress());
+                        Intent discoverableIntent;
 
-                    // Register the BroadcastReceiver
-                    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-                    registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+                        // Register the BroadcastReceiver
+                        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
 
-                    /*discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-                    startActivity(discoverableIntent);*/
-                    mBluetoothAdapter.startDiscovery();
+                        /*discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                        startActivity(discoverableIntent);*/
+                        Log.d("EntryApp", "Starting Discovery");
+                        mBluetoothAdapter.startDiscovery();
+                    }
 
 
                 }
@@ -186,5 +216,25 @@ public class FanSelectedTicket extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case BLUETOOTH_ON:
+                selectedTicket.setRedeemingDevice(mBluetoothAdapter.getAddress());
+                Intent discoverableIntent;
+
+                // Register the BroadcastReceiver
+                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+                registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+
+                        /*discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+                        startActivity(discoverableIntent);*/
+                Log.d("EntryApp", "Starting Discovery");
+                mBluetoothAdapter.startDiscovery();
+        }
     }
 }

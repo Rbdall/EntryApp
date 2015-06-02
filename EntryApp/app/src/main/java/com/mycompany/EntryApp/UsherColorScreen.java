@@ -39,6 +39,7 @@ import java.util.UUID;
 
 public class UsherColorScreen extends ActionBarActivity {
 
+    private static final int DISCOVERY_ON = 0;
     private static final int REQUEST_ENABLE_BT = 1;
     private BluetoothAdapter mBluetoothAdapter;
 
@@ -49,9 +50,17 @@ public class UsherColorScreen extends ActionBarActivity {
     private int[] mPossibleColors = {Color.YELLOW, Color.RED, Color.MAGENTA, Color.GREEN,
             Color.BLACK, Color.BLUE, Color.CYAN};
 
+    public static String[] Possible_UUIDs = {"a36f2eb8-2088-408d-9506-a6789838c1ca",
+            "a36f2eb8-2088-408d-9506-a6789838c1cb",
+            "a36f2eb8-2088-408d-9506-a6789838c1cc",
+            "a36f2eb8-2088-408d-9506-a6789838c1cd",
+            "a36f2eb8-2088-408d-9506-a6789838c1ce",
+            "a36f2eb8-2088-408d-9506-a6789838c1cf"};
+
     private void initializeManagers(){
         for(int i = 0; i < 6; i++){
-            mBluetoothManagers[i] = new BluetoothManager(getApplicationContext(), mHandler, false, i);
+            mBluetoothManagers[i] = new BluetoothManager(getApplicationContext(), mHandler,
+                    false, i, java.util.UUID.fromString(Possible_UUIDs[i]));
         }
     }
 
@@ -137,19 +146,23 @@ public class UsherColorScreen extends ActionBarActivity {
                     }
                     if (!mBluetoothAdapter.isEnabled()) {
                         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBtIntent, 0);
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
                     }
+                    else {
 
-                    //mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, false);
-                    initializeManagers();
+                        //mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, false);
+                        initializeManagers();
 
-                    if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-                        Intent discoverableIntent;
-                        discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
-                        startActivity(discoverableIntent);
+                        if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                            Intent discoverableIntent;
+                            discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
+                            startActivityForResult(discoverableIntent, DISCOVERY_ON);
+                        }
+                        else {
+                            startManagers();
+                        }
                     }
-                    startManagers();
 
 
                 } else {
@@ -171,6 +184,8 @@ public class UsherColorScreen extends ActionBarActivity {
     }
 
     private void initializeUsherButtons(){
+        final Button b = new Button(getApplicationContext());
+        final Drawable d = b.getBackground();
         final Button usherButtonOne = (Button) findViewById(R.id.UsherButton1);
         usherButtonOne.setEnabled(false);
         usherButtonOne.setOnClickListener(new View.OnClickListener() {
@@ -182,14 +197,11 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[0].write(BluetoothManager.objToBytes(resultTicket));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[0] = null;
-                Button b = new Button(getApplicationContext());
-                Drawable d = b.getBackground();
                 usherButtonOne.setBackgroundDrawable(d);
                 usherButtonOne.setEnabled(false);
 
@@ -214,14 +226,11 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[1].write(BluetoothManager.objToBytes(resultTicket));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[1] = null;
-                Button b = new Button(getApplicationContext());
-                Drawable d = b.getBackground();
                 usherButtonTwo.setBackgroundDrawable(d);
                 usherButtonTwo.setEnabled(false);
 
@@ -246,14 +255,11 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[2].write(BluetoothManager.objToBytes(resultTicket));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[2] = null;
-                Button b = new Button(getApplicationContext());
-                Drawable d = b.getBackground();
                 usherButtonThree.setBackgroundDrawable(d);
                 usherButtonThree.setEnabled(false);
 
@@ -278,14 +284,11 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[3].write(BluetoothManager.objToBytes(resultTicket));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[3] = null;
-                Button b = new Button(getApplicationContext());
-                Drawable d = b.getBackground();
                 usherButtonFour.setBackgroundDrawable(d);
                 usherButtonFour.setEnabled(false);
 
@@ -311,14 +314,11 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[4].write(BluetoothManager.objToBytes(resultTicket));
-                }
-                catch(Exception e){
+                } catch (Exception e) {
 
                 }
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[4] = null;
-                Button b = new Button(getApplicationContext());
-                Drawable d = b.getBackground();
                 usherButtonFive.setBackgroundDrawable(d);
                 usherButtonFive.setEnabled(false);
 
@@ -350,8 +350,6 @@ public class UsherColorScreen extends ActionBarActivity {
                 }
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[5] = null;
-                Button b = new Button(getApplicationContext());
-                Drawable d = b.getBackground();
                 usherButtonSix.setBackgroundDrawable(d);
                 usherButtonSix.setEnabled(false);
 
@@ -407,5 +405,30 @@ public class UsherColorScreen extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode){
+            case REQUEST_ENABLE_BT:
+                //mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler, false);
+                initializeManagers();
+
+                if (mBluetoothAdapter.getScanMode() != BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+                    Intent discoverableIntent;
+                    discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+                    discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3600);
+                    startActivityForResult(discoverableIntent, DISCOVERY_ON);
+                }
+                else {
+                    startManagers();
+                }
+                break;
+            case DISCOVERY_ON:
+                startManagers();
+                break;
+        }
+
     }
 }

@@ -32,7 +32,7 @@ public class BluetoothManager {
     private boolean mFanManager;
 
     //UUID for the application
-    private final UUID appUUID = java.util.UUID.fromString("a36f2eb8-2088-408d-9506-a6789838c1ce");
+    //private final UUID appUUID = java.util.UUID.fromString("a36f2eb8-2088-408d-9506-a6789838c1ce");
 
     //Application name for debugging
     private final String appName = "EntryApp";
@@ -45,6 +45,7 @@ public class BluetoothManager {
     private ConnectedThread mConnectedThread;
     private int mManagerID;
     private Ticket mTicket;
+    private UUID mUUID;
 
     //Constants to express current state
     private int mState;
@@ -54,13 +55,14 @@ public class BluetoothManager {
     public static final int STATE_CONNECTED = 3;
 
     //Constructor, initializes state and adapter
-    public BluetoothManager(Context context, Handler handler, boolean fanMode, int id){
+    public BluetoothManager(Context context, Handler handler, boolean fanMode, int id, UUID uuid){
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_START;
         mHandler = handler;
         mFanManager = fanMode;
         mManagerID = id;
         mTicket = null;
+        mUUID = uuid;
     }
 
     public void setTicket(Ticket ticket){
@@ -184,7 +186,7 @@ public class BluetoothManager {
         public AcceptThread(){
             BluetoothServerSocket temp = null;
             try{
-                temp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(appName, appUUID);
+                temp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(appName, mUUID);
             }
             catch(Exception e){
                 Log.e(appName, "Accept thread listen failed", e);
@@ -215,6 +217,12 @@ public class BluetoothManager {
                         switch(mState){
                             case STATE_ACCEPT:
                             case STATE_CONNECTING:
+                                try{
+                                    mmSeverSocket.close();
+                                }
+                                catch (Exception e){
+                                    Log.e(appName, "Could not close socket while accepting", e);
+                                }
                                 connected(socket, socket.getRemoteDevice());
                                 break;
                             case STATE_START:
@@ -254,7 +262,7 @@ public class BluetoothManager {
             BluetoothSocket temp = null;
 
             try{
-                temp = device.createRfcommSocketToServiceRecord(appUUID);
+                temp = device.createRfcommSocketToServiceRecord(mUUID);
             }
             catch (Exception e){
                 Log.e(appName, "ConnectThread create failed", e);
