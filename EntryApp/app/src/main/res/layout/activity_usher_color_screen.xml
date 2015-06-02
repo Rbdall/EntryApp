@@ -6,18 +6,22 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.mycompany.EntryApp.UsherColorScreen">
 
-    <TableLayout
+<!--    <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" android:layout_above="@+id/ScanSwitch">
+        android:layout_height="fill_parent" android:layout_above="@+id/ScanSwitch"
+        android:layout_gravity="center_horizontal">
         <TableRow android:id="@+id/FirstRow"
                   android:layout_height="match_parent"
-                  android:layout_width="fill_parent">
+                  android:layout_width="fill_parent"
+            android:layout_gravity="center_horizontal">
             <Button
                 android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:id="@+id/UsherButton1"/>
             <Button
                 android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_height="wrap_content"
                 android:id="@+id/UsherButton2"/>
 
@@ -32,7 +36,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/UsherButton4"/>
+                android:id="@+id/UsherButton4" />
 
         </TableRow>
         <TableRow android:id="@+id/ThirdRow"
@@ -49,7 +53,33 @@
 
         </TableRow>
 
-    </TableLayout>
+    </TableLayout> -->
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ScanSwitch">
+        <LinearLayout
+            android:id="@+id/wrapper"
+            android:layout_width="fill_parent" android:weightSum="1"
+            android:orientation="vertical" android:layout_height="fill_parent">
+            <LinearLayout android:id="@+id/LinearLayout02" android:layout_width="match_parent" android:layout_weight="0.33" android:layout_height="0dp">
+                <Button android:id="@+id/UsherButton1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
+                <Button android:id="@+id/UsherButton2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/LinearLayout01" android:layout_width="match_parent" android:layout_weight="0.33" android:layout_height="0dp">
+                <Button android:id="@+id/UsherButton3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
+                <Button android:id="@+id/UsherButton4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_weight="0.33" android:layout_height="0dp">
+                <Button android:id="@+id/UsherButton5" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent"></Button>
+                <Button android:id="@+id/UsherButton6" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent"></Button>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
