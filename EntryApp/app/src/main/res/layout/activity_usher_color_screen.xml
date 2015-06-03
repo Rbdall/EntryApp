@@ -106,7 +106,8 @@
         android:id="@+id/ScanSwitch"
         android:checked="false"
         android:layout_above="@+id/progressBar2"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffbbe3f2" />
 
     <Button
         android:layout_width="wrap_content"

@@ -8,15 +8,30 @@
     <Button
         android:id="@+id/fanMainButton"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25px"
+        android:layout_height="0dp"
         android:text="FAN"
-        android:onClick="fanPress"/>
+        android:onClick="fanPress"
+        android:layout_weight="4"
+        android:layout_margin="20dp"
+        android:textSize="40dp"
+        android:background="#8DC5DA"
+        android:textColor="#01212D" />
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="invisible" />
     <Button
         android:id="@+id/usherMainButton"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:text="USHER"
-        android:onClick="usherPress"/>
+        android:onClick="usherPress"
+        android:visibility="visible"
+        android:layout_weight="4"
+        android:layout_margin="20dp"
+        android:textSize="40dp"
+        android:background="#8DC5DA"
+        android:textColor="#01212D" />
 
 </LinearLayout>

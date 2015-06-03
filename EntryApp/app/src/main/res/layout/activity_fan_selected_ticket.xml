@@ -17,7 +17,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/light_text_color" />
 
     <Switch
         android:layout_width="wrap_content"
@@ -27,7 +28,8 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
-        android:checked="false" />
+        android:checked="false"
+        android:textColor="#ffbbe3f2" />
 
     <ProgressBar
         android:layout_width="wrap_content"
