@@ -39,6 +39,7 @@ public class FanSelectedTicket extends ActionBarActivity {
 
     public static final int COLOR_SET = 1;
     public static final int TICKET_VALIDATED = 2;
+    public static final int CONNECTION_FAILED = 3;
     private final Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
@@ -50,12 +51,16 @@ public class FanSelectedTicket extends ActionBarActivity {
                     colorView.setBackgroundColor(mPossibleColors[msg.arg1]);
                     break;
                 case TICKET_VALIDATED:
+                    mBluetoothManager.reset();
+                    mBluetoothManager = null;
                     ValidatedTicket ticket = (ValidatedTicket) msg.obj;
                     Intent i = new Intent(getApplicationContext(), FanValidatedTicket.class);
                     i.putExtra("TicketInfo", ticket);
                     startActivity(i);
                     finish();
                     break;
+                case CONNECTION_FAILED:
+                    failedConnection = true;
 
             }
         }
@@ -68,33 +73,44 @@ public class FanSelectedTicket extends ActionBarActivity {
                                              "a36f2eb8-2088-408d-9506-a6789838c1ce",
                                              "a36f2eb8-2088-408d-9506-a6789838c1cf"};
 
+    private boolean failedConnection = false;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if(BluetoothDevice.ACTION_FOUND.equals(action)){
+            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                for(int i = 0; i < 6; i++){
-                    Log.d("EntryApp", "Trying to connect to UUID " + i);
-                    mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler,
-                            true, 0, java.util.UUID.fromString(Possible_UUIDs[i]));
-                    mBluetoothManager.setTicket(selectedTicket);
-                    mBluetoothManager.connect(device);
-                    try{
-                        wait(200);
-                    }catch(Exception e){
-
+                BluetoothSocket temp = null;
+                int connectedUUID = -1;
+                for (int i = 0; i < 6; i++) {
+                    try {
+                        temp = device.createRfcommSocketToServiceRecord(java.util.UUID.fromString(Possible_UUIDs[i]));
+                    } catch (Exception e) {
+                        Log.e("EntryApp", "ConnectThread create failed", e);
                     }
-                    if(mBluetoothManager.getState() == BluetoothManager.STATE_CONNECTED
-                            || mBluetoothManager.getState() == BluetoothManager.STATE_CONNECTING){
-                        Log.d("EntryApp", "Connected to UUID " + i);
+                    mBluetoothAdapter.cancelDiscovery();
+                    try {
+                        temp.connect();
+                        connectedUUID = i;
                         break;
+                    } catch (Exception e) {
+                        try {
+                            mBluetoothAdapter.startDiscovery();
+                            temp.close();
+
+                        } catch (Exception e2) {
+
+                        }
                     }
-
-                    Log.d("EntryApp", "Failed to connect to UUID " + i);
-
                 }
+                if (connectedUUID == -1) {
+                    return;
+                }
+                mBluetoothManager = new BluetoothManager(getApplicationContext(), mHandler,
+                        true, 0, java.util.UUID.fromString(Possible_UUIDs[connectedUUID]));
+                mBluetoothManager.setTicket(selectedTicket);
 
+                mBluetoothManager.connected(temp, device);
             }
         }
     };
@@ -236,5 +252,11 @@ public class FanSelectedTicket extends ActionBarActivity {
                 Log.d("EntryApp", "Starting Discovery");
                 mBluetoothAdapter.startDiscovery();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(mReceiver);
     }
 }

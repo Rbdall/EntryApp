@@ -19,6 +19,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -27,6 +28,18 @@ import java.util.UUID;
  */
 public class BluetoothManager {
     private boolean DEBUG_MODE = true;
+
+    public static final int REMOVE_COLOR = 0;
+    public final Handler colorHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case REMOVE_COLOR:
+                    Integer thing = new Integer(msg.arg1);
+                    mColorsInUse.remove(thing);
+            }
+        }
+    };
 
     //boolean which defines behavior of connected manager
     private boolean mFanManager;
@@ -46,6 +59,8 @@ public class BluetoothManager {
     private int mManagerID;
     private Ticket mTicket;
     private UUID mUUID;
+
+    private ArrayList<Integer> mColorsInUse = new ArrayList<Integer>();
 
     //Constants to express current state
     private int mState;
@@ -284,6 +299,7 @@ public class BluetoothManager {
             catch(Exception e){
                 Log.d(appName, "Connect thread could not connect");
                 try{
+                    mHandler.obtainMessage(FanSelectedTicket.CONNECTION_FAILED).sendToTarget();
                     mBluetoothAdapter.startDiscovery();
                     mmSocket.close();
                 }
@@ -394,8 +410,12 @@ public class BluetoothManager {
                     //This is where we would do computation to ensure the ticket is valid
 
                     Log.d(appName, "Usher writing color");
-                    int color = (int)(Math.random()*6);
-                    buffer[0] = (byte) color;
+                    Integer color;
+                    do {
+                        color = (int) (Math.random() * 6);
+                    }while(mColorsInUse.contains(color));
+                    mColorsInUse.add(color);
+                    buffer[0] = (byte) color.intValue();
                     mmOutStream.write(buffer);
                     buffer = new byte[1024];
 

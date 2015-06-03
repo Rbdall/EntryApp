@@ -83,6 +83,7 @@ public class UsherColorScreen extends ActionBarActivity {
     }
 
     public static final int COLOR_SET = 1;
+    private int[] colorsInUse = {-1,-1,-1,-1,-1,-1};
 
     private final Handler mHandler = new Handler(){
         @Override
@@ -113,6 +114,7 @@ public class UsherColorScreen extends ActionBarActivity {
                             Log.d("EntryApp", "BAD THINGS");
                             return;
                     }
+                    colorsInUse[msg.arg2] = msg.arg1;
                     validateButton.setEnabled(true);
                     validateButton.setBackgroundColor(mPossibleColors[msg.arg1]);
                     mCurrentTickets[msg.arg2] = (Ticket) msg.obj;
@@ -197,6 +199,9 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[0].write(BluetoothManager.objToBytes(resultTicket));
+                    mBluetoothManagers[0].colorHandler.obtainMessage(BluetoothManager.REMOVE_COLOR,
+                                                                colorsInUse[0], -1, null).sendToTarget();
+
                 } catch (Exception e) {
 
                 }
@@ -226,6 +231,8 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[1].write(BluetoothManager.objToBytes(resultTicket));
+                    mBluetoothManagers[1].colorHandler.obtainMessage(BluetoothManager.REMOVE_COLOR,
+                            colorsInUse[1], -1, null).sendToTarget();
                 } catch (Exception e) {
 
                 }
@@ -255,6 +262,8 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[2].write(BluetoothManager.objToBytes(resultTicket));
+                    mBluetoothManagers[2].colorHandler.obtainMessage(BluetoothManager.REMOVE_COLOR,
+                            colorsInUse[2], -1, null).sendToTarget();
                 } catch (Exception e) {
 
                 }
@@ -284,6 +293,8 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[3].write(BluetoothManager.objToBytes(resultTicket));
+                    mBluetoothManagers[3].colorHandler.obtainMessage(BluetoothManager.REMOVE_COLOR,
+                            colorsInUse[3], -1, null).sendToTarget();
                 } catch (Exception e) {
 
                 }
@@ -314,6 +325,8 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[4].write(BluetoothManager.objToBytes(resultTicket));
+                    mBluetoothManagers[4].colorHandler.obtainMessage(BluetoothManager.REMOVE_COLOR,
+                            colorsInUse[4], -1, null).sendToTarget();
                 } catch (Exception e) {
 
                 }
@@ -344,6 +357,8 @@ public class UsherColorScreen extends ActionBarActivity {
                         mBluetoothAdapter.getAddress());
                 try {
                     mBluetoothManagers[5].write(BluetoothManager.objToBytes(resultTicket));
+                    mBluetoothManagers[5].colorHandler.obtainMessage(BluetoothManager.REMOVE_COLOR,
+                            colorsInUse[5], -1, null).sendToTarget();
                 }
                 catch(Exception e){
 
