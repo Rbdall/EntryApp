@@ -51,8 +51,19 @@
         android:id="@+id/ColorView"
         android:layout_gravity="bottom"
         android:layout_below="@+id/pairedText"
-        android:layout_marginLeft="-200dp"
-        android:layout_marginRight="-200dp"
-        android:layout_marginBottom="-200dp"></FrameLayout>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/progressBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/MAC"
+            android:layout_gravity="center"
+            android:textColor="#ffffffff" />
+    </FrameLayout>
 
 </RelativeLayout>

@@ -66,16 +66,28 @@
             android:layout_width="fill_parent" android:weightSum="1"
             android:orientation="vertical" android:layout_height="fill_parent">
             <LinearLayout android:id="@+id/LinearLayout02" android:layout_width="match_parent" android:layout_weight="0.33" android:layout_height="0dp">
-                <Button android:id="@+id/UsherButton1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
-                <Button android:id="@+id/UsherButton2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
+                <Button android:id="@+id/UsherButton1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"
+                    android:textColor="#ffffffff"
+                    android:textSize="20dp"></Button>
+                <Button android:id="@+id/UsherButton2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"
+                    android:textColor="#ffffffff"
+                    android:textSize="20dp"></Button>
             </LinearLayout>
             <LinearLayout android:id="@+id/LinearLayout01" android:layout_width="match_parent" android:layout_weight="0.33" android:layout_height="0dp">
-                <Button android:id="@+id/UsherButton3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
-                <Button android:id="@+id/UsherButton4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"></Button>
+                <Button android:id="@+id/UsherButton3" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"
+                    android:textColor="#ffffffff"
+                    android:textSize="20dp"></Button>
+                <Button android:id="@+id/UsherButton4" android:layout_width="0dp" android:layout_weight="1" android:layout_height="fill_parent"
+                    android:textColor="#ffffffff"
+                    android:textSize="20dp"></Button>
             </LinearLayout>
             <LinearLayout android:id="@+id/linearLayout1" android:layout_width="match_parent" android:layout_weight="0.33" android:layout_height="0dp">
-                <Button android:id="@+id/UsherButton5" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent"></Button>
-                <Button android:id="@+id/UsherButton6" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent"></Button>
+                <Button android:id="@+id/UsherButton5" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent"
+                    android:textColor="#ffffffff"
+                    android:textSize="20dp"></Button>
+                <Button android:id="@+id/UsherButton6" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent"
+                    android:textColor="#ffffffff"
+                    android:textSize="20dp"></Button>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

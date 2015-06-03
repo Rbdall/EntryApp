@@ -49,6 +49,8 @@ public class FanSelectedTicket extends ActionBarActivity {
                     Log.d("EntryApp", "Arg 1: " + msg.arg1);
                     Log.d("EntryApp", "Arg 2: " + msg.arg2);
                     colorView.setBackgroundColor(mPossibleColors[msg.arg1]);
+                    TextView MACText = (TextView) findViewById(R.id.MAC);
+                    MACText.setText(mBluetoothAdapter.getAddress());
                     break;
                 case TICKET_VALIDATED:
                     mBluetoothManager.reset();

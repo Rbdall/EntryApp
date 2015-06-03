@@ -117,6 +117,7 @@ public class UsherColorScreen extends ActionBarActivity {
                     colorsInUse[msg.arg2] = msg.arg1;
                     validateButton.setEnabled(true);
                     validateButton.setBackgroundColor(mPossibleColors[msg.arg1]);
+                    validateButton.setText(((Ticket) msg.obj).getRedeemingDevice());
                     mCurrentTickets[msg.arg2] = (Ticket) msg.obj;
                     Log.d("EntryApp", "Ticket validated via Manager" + msg.arg2);
 
@@ -205,6 +206,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 } catch (Exception e) {
 
                 }
+                usherButtonOne.setText("");
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[0] = null;
                 usherButtonOne.setBackgroundDrawable(d);
@@ -236,6 +238,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 } catch (Exception e) {
 
                 }
+                usherButtonTwo.setText("");
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[1] = null;
                 usherButtonTwo.setBackgroundDrawable(d);
@@ -267,6 +270,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 } catch (Exception e) {
 
                 }
+                usherButtonThree.setText("");
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[2] = null;
                 usherButtonThree.setBackgroundDrawable(d);
@@ -298,6 +302,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 } catch (Exception e) {
 
                 }
+                usherButtonFour.setText("");
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[3] = null;
                 usherButtonFour.setBackgroundDrawable(d);
@@ -330,6 +335,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 } catch (Exception e) {
 
                 }
+                usherButtonFive.setText("");
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[4] = null;
                 usherButtonFive.setBackgroundDrawable(d);
@@ -363,6 +369,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 catch(Exception e){
 
                 }
+                usherButtonSix.setText("");
                 mValidatedTickets.addFirst(resultTicket);
                 mCurrentTickets[5] = null;
                 usherButtonSix.setBackgroundDrawable(d);
