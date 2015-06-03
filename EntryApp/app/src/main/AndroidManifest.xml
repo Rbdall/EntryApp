@@ -23,7 +23,7 @@
         </activity>
         <activity
             android:name=".UsherColorScreen"
-            android:label="@string/title_activity_usher_color_screen" >
+            android:label="Usher Screen" >
         </activity>
         <activity
             android:name=".TicketList"
@@ -35,11 +35,11 @@
         </activity>
         <activity
             android:name=".FanValidatedTicket"
-            android:label="@string/title_activity_validated_ticket" >
+            android:label="Validated Ticket!" >
         </activity>
         <activity
             android:name=".UsherValidatedTicketList"
-            android:label="@string/title_activity_usher_validated_ticket_list" >
+            android:label="Validation History" >
         </activity>
     </application>
 
