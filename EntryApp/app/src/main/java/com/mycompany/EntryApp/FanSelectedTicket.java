@@ -43,18 +43,24 @@ public class FanSelectedTicket extends ActionBarActivity {
     private final Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
+            TextView MACText;
             switch (msg.what){
                 case COLOR_SET:
                     FrameLayout colorView = (FrameLayout) findViewById(R.id.ColorView);
                     Log.d("EntryApp", "Arg 1: " + msg.arg1);
                     Log.d("EntryApp", "Arg 2: " + msg.arg2);
                     colorView.setBackgroundColor(mPossibleColors[msg.arg1]);
-                    TextView MACText = (TextView) findViewById(R.id.MAC);
+                    MACText = (TextView) findViewById(R.id.MAC);
+                    if(msg.arg1 == 0 || msg.arg1 == 3){
+                        MACText.setTextColor(Color.BLACK);
+                    }
                     MACText.setText(mBluetoothAdapter.getAddress());
                     break;
                 case TICKET_VALIDATED:
                     mBluetoothManager.reset();
                     mBluetoothManager = null;
+                    MACText = (TextView) findViewById(R.id.MAC);
+                    MACText.setTextColor(Color.WHITE);
                     ValidatedTicket ticket = (ValidatedTicket) msg.obj;
                     Intent i = new Intent(getApplicationContext(), FanValidatedTicket.class);
                     i.putExtra("TicketInfo", ticket);
