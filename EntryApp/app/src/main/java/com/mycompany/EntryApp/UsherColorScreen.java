@@ -117,6 +117,11 @@ public class UsherColorScreen extends ActionBarActivity {
                     colorsInUse[msg.arg2] = msg.arg1;
                     validateButton.setEnabled(true);
                     validateButton.setBackgroundColor(mPossibleColors[msg.arg1]);
+                    if (mPossibleColors[msg.arg1] == Color.YELLOW || mPossibleColors[msg.arg1] == Color.GREEN) {
+                        validateButton.setTextColor(Color.BLACK);
+                    } else {
+                        validateButton.setTextColor(Color.WHITE);
+                    }
                     validateButton.setText(((Ticket) msg.obj).getRedeemingDevice());
                     mCurrentTickets[msg.arg2] = (Ticket) msg.obj;
                     Log.d("EntryApp", "Ticket validated via Manager" + msg.arg2);
@@ -211,6 +216,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 mCurrentTickets[0] = null;
                 usherButtonOne.setBackgroundDrawable(d);
                 usherButtonOne.setEnabled(false);
+                usherButtonOne.setBackgroundResource(R.drawable.abc_popup_background_mtrl_mult);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -243,6 +249,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 mCurrentTickets[1] = null;
                 usherButtonTwo.setBackgroundDrawable(d);
                 usherButtonTwo.setEnabled(false);
+                usherButtonTwo.setBackgroundResource(R.drawable.abc_popup_background_mtrl_mult);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -275,6 +282,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 mCurrentTickets[2] = null;
                 usherButtonThree.setBackgroundDrawable(d);
                 usherButtonThree.setEnabled(false);
+                usherButtonThree.setBackgroundResource(R.drawable.abc_popup_background_mtrl_mult);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -307,6 +315,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 mCurrentTickets[3] = null;
                 usherButtonFour.setBackgroundDrawable(d);
                 usherButtonFour.setEnabled(false);
+                usherButtonFour.setBackgroundResource(R.drawable.abc_popup_background_mtrl_mult);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -340,6 +349,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 mCurrentTickets[4] = null;
                 usherButtonFive.setBackgroundDrawable(d);
                 usherButtonFive.setEnabled(false);
+                usherButtonFive.setBackgroundResource(R.drawable.abc_popup_background_mtrl_mult);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
@@ -374,6 +384,7 @@ public class UsherColorScreen extends ActionBarActivity {
                 mCurrentTickets[5] = null;
                 usherButtonSix.setBackgroundDrawable(d);
                 usherButtonSix.setEnabled(false);
+                usherButtonSix.setBackgroundResource(R.drawable.abc_popup_background_mtrl_mult);
 
                 mHandler.postDelayed(new Runnable() {
                     @Override
